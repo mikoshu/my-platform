@@ -78,3 +78,10 @@ a {
 
 .clearfix {
   zoom: 1; }
+
+@mixin transition($a){
+    transition: $a;
+    -webkit-transition: $a;
+    -moz-transition: $a;
+    -m-transition: $a;
+}
