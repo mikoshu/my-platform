@@ -96,13 +96,11 @@
   .tab-content{
     width:100%;
     height:calc(100vh - 121px);
-    overflow-y: scroll; 
+    text-align: left;
+    //overflow-y: scroll; 
     .tab-con{
       height:100%;
-      iframe{
-        width:100%;
-        height:100%;
-      }
+      
     }
   }
   .dn{
@@ -128,18 +126,21 @@
               <i :class="val.icon"></i>{{val.name}}
             </el-menu-item>
           </el-menu-item-group>
-
-          <!-- <el-menu-item-group title="分组一">
-            <el-menu-item index="1" data-href="test1.html" data-title="测试1" data-index="0" @click='toTab'><i class="el-icon-message"></i>测试一</el-menu-item>
-            <el-menu-item index="2" data-href="test2.html" data-title="测试2" data-index="1" @click='toTab'><i class="el-icon-message"></i>测试二</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="分组二">
-            <el-menu-item index="3" data-href="test3.html" data-title="测试3" data-index="2" @click='toTab'><i class="el-icon-message"></i>测试三</el-menu-item>
-            <el-menu-item index="4" data-href="test4.html" data-title="测试4" data-index="3" @click='toTab'><i class="el-icon-message"></i>测试四</el-menu-item>
-          </el-menu-item-group> -->
         </el-menu>
       </el-col> 
       <el-col :span="21">
+
+        <!-- <el-tabs v-model="editableTabsValue2" type="card" closable @tab-remove="removeTab">
+          <el-tab-pane
+            v-for="(item, index) in editableTabs2"
+            :key="item.name"
+            :label="item.title"
+            :name="item.name"
+          >
+            {{item.content}}
+          </el-tab-pane>
+        </el-tabs> -->
+
         <div class="tab-row">
           <span class="tab-last" @click="tabToNext"></span>
           <div class="tab-head-con" ref="tabRow">
@@ -159,10 +160,10 @@
         </div>
         <div class="tab-content">
           <div class="tab-con" v-if="tabHeads.length != 0" v-for="(val,i) in tabHeads" :class="val.index == tabIndex ? '' : 'dn' ">
-            <iframe :src="'./'+val.url" frameborder="0"></iframe>
+            <component :is='val.url' > </component> 
           </div>
           <div class="tab-con" v-if="tabHeads.length == 0" >
-            <iframe :src="defaultTab.url" frameborder="0"></iframe>
+            <component :is='defaultTab.url' > </component> 
           </div>
         </div>
       </el-col>  
@@ -171,6 +172,9 @@
 </template>
 
 <script>
+import page1 from './views/page1.vue';
+import page2 from './views/page2.vue';
+import page3 from './views/page3.vue';
 export default {
   name: 'app',
   data(){
@@ -181,13 +185,13 @@ export default {
           title: '分组1',
           content: [
             {
-              name: '测试1',
-              url: 'pages/test1.html',
+              name: '表格',
+              url: 'page1',
               icon: 'el-icon-message'
             },
             {
-              name: '测试2',
-              url: 'test2.html',
+              name: '表单',
+              url: 'page2',
               icon: 'el-icon-message'
             }
           ]
@@ -197,30 +201,30 @@ export default {
           content: [
             {
               name: '测试3',
-              url: 'test3.html',
+              url: 'page3',
               icon: 'el-icon-message'
             },
-            {
-              name: '测试4',
-              url: 'test4.html',
-              icon: 'el-icon-message'
-            },
-            {
-              name: '测试5',
-              url: 'test5.html',
-              icon: 'el-icon-message'
-            },
-            {
-              name: '测试6',
-              url: 'test6.html',
-              icon: 'el-icon-message'
-            }
+            // {
+            //   name: '测试4',
+            //   url: 'test4.html',
+            //   icon: 'el-icon-message'
+            // },
+            // {
+            //   name: '测试5',
+            //   url: 'test5.html',
+            //   icon: 'el-icon-message'
+            // },
+            // {
+            //   name: '测试6',
+            //   url: 'test6.html',
+            //   icon: 'el-icon-message'
+            // }
           ]
         }
       ],
       defaultTab: {
         name: '测试1',
-        url: 'test1.html'
+        url: 'page1'
       },
       tabIndex: 0,
       tabHeads: [],
@@ -291,11 +295,21 @@ export default {
       }
     }
   },
+  components:{
+    page1,
+    page2,
+    page3
+  },
   mounted: function(){
     const hash = location.hash.replace(/^#/, '');
 
     window.addEventListener('hashchange', function(e, triggered) { // 绑定hash值
       const hash = location.hash.replace(/^#/, ''); 
+      this.tabHeads.map((val,i) => {
+        if(hash == val.url){
+          this.tabIndex = val.index;
+        }
+      });
     }.bind(this));
 
     this.hash = hash;
@@ -303,7 +317,7 @@ export default {
     this.tabRowWidth = row.clientWidth;
     this.tabHeads.map((val,i) => {
       if(hash == val.url){
-        this.tabIndex = i;
+        this.tabIndex = val.index;
       }
     });
     // if(hash != ''){
