@@ -159,11 +159,8 @@
           <span class="tab-next" @click="tabToLast"></span>
         </div>
         <div class="tab-content">
-          <div class="tab-con" v-if="tabHeads.length != 0" v-for="(val,i) in tabHeads" :class="val.index == tabIndex ? '' : 'dn' ">
+          <div class="tab-con" v-for="(val,i) in tabHeads" :class="val.index == tabIndex ? '' : 'dn' ">
             <component :is='val.url' > </component> 
-          </div>
-          <div class="tab-con" v-if="tabHeads.length == 0" >
-            <component :is='defaultTab.url' > </component> 
           </div>
         </div>
       </el-col>  
@@ -222,12 +219,14 @@ export default {
           ]
         }
       ],
-      defaultTab: {
-        name: '测试1',
-        url: 'page1'
-      },
       tabIndex: 0,
-      tabHeads: [],
+      tabHeads: [
+        {
+          name: '表格',
+          url: 'page1',
+          index: 0
+        }
+      ],
       isHas: false,
       hash: '',
       tabsWidth: 137,
@@ -252,8 +251,10 @@ export default {
         }
       });
       if(!this.isHas){
-        console.log(this.isHas)
         this.tabHeads.push(obj);
+        if(window.hasOwnProperty('sessionStorage')){
+          sessionStorage.tabs = JSON.stringify(this.tabHeads);
+        }
         this.ulWidth = this.tabHeads.length * this.tabsWidth;
       }
       this.isHas = false;
@@ -273,7 +274,7 @@ export default {
         }
       });
       setTimeout(()=>{
-        this.tabIndex = this.tabHeads.length-1
+        this.tabIndex = this.tabHeads[this.tabHeads.length-1].index
         console.log(this.tabIndex)
       },500);
     },
@@ -313,13 +314,25 @@ export default {
     }.bind(this));
 
     this.hash = hash;
+    if(hash != ''){
+      if(window.hasOwnProperty('sessionStorage') && sessionStorage.tabs){
+        const nowTab = JSON.parse(sessionStorage.tabs);
+        nowTab.map((val,i) => {
+          if(hash == val.url){
+            this.tabHeads = [];
+            this.tabHeads.push(val);
+            this.tabIndex = val.index;
+          }
+        });
+      }else{
+        location.href = "#";
+      }
+    }
+    
+
     const row = this.$refs.tabRow;
     this.tabRowWidth = row.clientWidth;
-    this.tabHeads.map((val,i) => {
-      if(hash == val.url){
-        this.tabIndex = val.index;
-      }
-    });
+    
     // if(hash != ''){
     //   console.log(hash)
     //   this.tabHeads.map((val,i) => {
