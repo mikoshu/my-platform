@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
+import Login from './login'
 //import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
@@ -15,6 +16,33 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   //router,
-  template: '<App/>',
-  components: { App }
+  data:{
+    temp: 'Login'
+  },
+  //template: this.temp,
+  methods:{
+    logined(val){
+        console.log(val)
+        this.temp = 'App';
+    }
+  },
+  components: { 
+    App,
+    Login
+  },
+  mounted(){
+    const hash = location.hash.replace(/^#/, '');
+    console.log(hash)
+    if(hash != 'login'){
+        console.log(document.cookie)
+        if(sessionStorage.username){
+            this.temp = 'App';
+        }
+    }else{
+        this.temp = 'Login';
+    }
+    
+
+    //setTimeout(()=>{this.temp = 'App'},3000)
+  }
 })

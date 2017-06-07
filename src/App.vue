@@ -172,6 +172,7 @@
 import page1 from './views/page1.vue';
 import page2 from './views/page2.vue';
 import page3 from './views/page3.vue';
+
 export default {
   name: 'app',
   data(){
@@ -197,7 +198,7 @@ export default {
           title: '分组2',
           content: [
             {
-              name: '测试3',
+              name: '请求',
               url: 'page3',
               icon: 'el-icon-message'
             },

@@ -48,6 +48,14 @@ Object.keys(proxyTable).forEach(function (context) {
   app.use(proxyMiddleware(options.filter || context, options))
 })
 
+// 代理事件
+
+app.use('/api', proxyMiddleware({
+  target: 'http://adadmin.guozhenlife.net', 
+  changeOrigin: true,
+  cookieDomainRewrite: '.localhost'
+}))
+
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())
 

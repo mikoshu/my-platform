@@ -85,3 +85,10 @@ a {
     -moz-transition: $a;
     -m-transition: $a;
 }
+
+@mixin transform($a){
+    transform: $a;
+    -webkit-transform: $a;
+    -moz-transform: $a;
+    -m-transform: $a;
+}
