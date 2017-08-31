@@ -30,6 +30,11 @@ module.exports = merge(baseWebpackConfig, {
       template: 'index.html',
       inject: true
     }),
+    new HtmlWebpackPlugin({  // 自建 login 页面
+      filename: 'login.html',
+      template: 'login.html',
+      inject: true
+    }),
     new FriendlyErrorsPlugin()
   ]
 })

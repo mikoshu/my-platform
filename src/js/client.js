@@ -1,14 +1,13 @@
 import axios from 'axios';
 import QS from 'qs';
 import { Loading } from 'element-ui';
-export default client;
-
+export default Clients;
 var loading;
 axios.interceptors.request.use(function (config) {
-    if(config.isLoading){
+    if(config.showLoading){
         loading = Loading.service({ fullscreen: true });
     }
-    if(config.data){
+    if(config.data ){
         config.data = QS.stringify(config.data);
     } 
     return config;
@@ -26,20 +25,24 @@ axios.interceptors.response.use(function (response) {
     return response;
     }, function (error) {
     // Do something with response error 
-    if(typeof loading == 'function'){
+    if(typeof loading == 'object'){
         loading.close();
     }
     return Promise.reject(error);
-});   
-
-function client(obj){
-    return axios(obj)
-    .then(function(resp){
-        if(resp.status == '302'){
-            //location.href = '#login'
-        }else{
-            return Promise.resolve(resp)
-        }
-    })
+});  
+function Clients(){
+    
+} 
+Clients.prototype = {
+    client(obj){
+        return axios(obj)
+        .then(function(resp){
+            if(resp.status == '302'){
+                location.href = 'login.html'
+            }else{
+                return Promise.resolve(resp)
+            }
+        })
+    }
 }
 

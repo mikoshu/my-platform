@@ -83,7 +83,7 @@
                     if(data.code == 1){
                         sessionStorage.username = data.data.user_name;
                         setTimeout(()=>{
-                            self.$emit('logined');
+                            window.location.href = 'index.html'
                         },2000)
                     }
                     self.$message(data.msg);

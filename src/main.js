@@ -17,32 +17,17 @@ new Vue({
   el: '#app',
   //router,
   data:{
-    temp: 'Login'
+    temp: 'App'
   },
   //template: this.temp,
   methods:{
-    logined(val){
-        console.log(val)
-        this.temp = 'App';
-    }
+    
   },
   components: { 
     App,
     Login
   },
   mounted(){
-    const hash = location.hash.replace(/^#/, '');
-    console.log(hash)
-    if(hash != 'login'){
-        console.log(document.cookie)
-        if(sessionStorage.username){
-            this.temp = 'App';
-        }
-    }else{
-        this.temp = 'Login';
-    }
-    
 
-    //setTimeout(()=>{this.temp = 'App'},3000)
   }
 })

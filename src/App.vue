@@ -9,7 +9,40 @@
 }
 .top-banner{
     height:100px;
-    background:#73c3b1;
+    background:#1d2533;
+    .logo{
+      position: absolute;
+      left:37px;
+      top:24px;
+      height: 45px;
+      padding-left:50px;
+      line-height: 45px;
+      color:#fff;
+      //background: url(./images/logo.png) left center no-repeat;
+      font-size:24px;
+      font-family: "微软雅黑";
+    }
+    .user{
+      position: absolute;
+      top:0;
+      right:20px;
+      line-height:100px;
+      height:100px; 
+      dl{
+        dd{
+          float:left;
+          width:50px;
+          height:100px;
+          //background: url(./images/icon-user.png) center no-repeat;
+        }
+        dt{
+          float:left;
+          color:#8492a6;
+          font-size:16px;
+          font-family: "微软雅黑";
+        }
+      }
+    }
 }
 .menu-content{
   height: calc(100vh - 100px);
@@ -17,15 +50,36 @@
     height:100%;
   }
   .side-bar{
-    background:#555a59;
+    height:100%;
+    background:#fff;
+    overflow-y: auto;
     .el-menu{
-      background:#555a59;
+      background:#fff;
       text-align:left;
+
       .is-active{
         color: #20a0ff;
       }
       li{
-        color:#fff;
+        color:#535455;
+        font-size:14px;
+        
+      }
+      .el-submenu .el-menu-item{
+        line-height: 40px;
+        height:40px;
+      }
+      .el-submenu__title{
+        background: #f5f6f8;
+        height:40px;
+        line-height: 40px;
+        span{
+          display: inline-block;
+          width:35px;
+          height:40px;
+          vertical-align: middle;
+        }
+        
       }
     }
   }
@@ -43,7 +97,7 @@
       width:14px;
       height:13px;
       cursor: pointer;
-      z-index:9;
+      z-index:12;
       &:hover{
         opacity:.8;
       }
@@ -64,6 +118,7 @@
       .is-active{
         background:url(./images/tab-140-120.gif) no-repeat -1px -30px;
         z-index:9;
+        
       }
       li{
         position:relative;
@@ -97,70 +152,96 @@
     width:100%;
     height:calc(100vh - 121px);
     text-align: left;
-    //overflow-y: scroll; 
+    padding-left:15px;
+    background:#efeff4;
     .tab-con{
       height:100%;
-      
+      overflow-y: scroll;
+      background: #fff;
     }
+    .el-dialog__footer,.el-message-box__btns{
+      text-align: center;
+    }
+
+    
   }
   .dn{
     display:none;
   }
 
+
+
 }
 
+.el-loading-mask .el-loading-spinner .circular{
+  animation: loading-rotate 2s linear infinite;
+  -webkit-animation: loading-rotate 2s linear infinite;
+  -moz-animation: loading-rotate 2s linear infinite;
+}
+
+@keyframes loading-rotate {
+  100%{transform:rotate(360deg); -webkit-transform:rotate(360deg) }
+}
+
+.bread-menu {
+        padding: 20px 20px 0 20px;
+        font-size:13px;
+        a{
+          display: inline-block;
+          margin-right:5px;
+          color:#000;
+          &:hover{
+            transition:color .15s;
+            color:#5da1f7;
+          }
+        }
+        span{
+          color:#97a8be;
+        }
+    }
 
 </style>
 
 <template>
   <div class="menu-main">
-    <el-row class="top-banner">
-    
-    </el-row>
+    <div class="top-banner">
+      <a href="javascript:;" class="logo">烟花安监管理云平台</a>
+      <div class="user">
+        <dl class="clearfix">
+          <dd></dd>
+          <dt>您好，<span>{{username}}</span></dt>
+        </dl>
+      </div>
+    </div>
     <el-row class="menu-content">
       <el-col :span="3" class="side-bar" >
 
-        <el-menu mode="vertical" default-active="1" class="el-menu-vertical-demo"  >
-          <el-menu-item-group v-for="(group,i) in groupMenu" :title="group.title" key='group.title'>
-            <el-menu-item v-for="(val,index) in group.content" :index="val.url" :data-title="val.name" :data-href="val.url" :data-index="(i*groupMenu[i>0?i-1:i].content.length)+index" :key="index" @click='toTab' >
-              <i :class="val.icon"></i>{{val.name}}
+        <el-menu mode="vertical"  :default-active="defaultActive" class="el-menu-vertical-demo" :default-openeds="defaultOpened"  >
+          <el-submenu v-for="(group,i) in groupMenu" :index="i.toString()" :key="i">
+            <template slot="title"><span :class="group.class"></span>{{group.title}}</template>
+            <el-menu-item v-for="(val,index) in group.content" :index="val.url" :data-title="val.name" :data-href="val.url" :data-index="getIndex(i,index)" :key="getIndex(i,index)" @click='toTab'  >
+              {{val.name}}
             </el-menu-item>
-          </el-menu-item-group>
+          </el-submenu>
         </el-menu>
       </el-col> 
+
       <el-col :span="21">
-
-        <!-- <el-tabs v-model="editableTabsValue2" type="card" closable @tab-remove="removeTab">
-          <el-tab-pane
-            v-for="(item, index) in editableTabs2"
-            :key="item.name"
-            :label="item.title"
-            :name="item.name"
-          >
-            {{item.content}}
-          </el-tab-pane>
-        </el-tabs> -->
-
         <div class="tab-row">
           <span class="tab-last" @click="tabToNext"></span>
           <div class="tab-head-con" ref="tabRow">
             <ul class="clearfix" ref="tabHead" :style="{left: tabLeft+'px',width: ulWidth+'px'}">
-              <li v-if="tabHeads.length != 0" v-for="(val,i) in tabHeads" :class="[val.index == tabIndex? 'is-active' : '' ]" :data-index="val.index" :data-url="val.url" :key="i" @click="clickTab" >
+              <li v-if="tabHeads.length != 0" v-for="(val,i) in tabHeads" :class="[val.url == hash? 'is-active' : '' ]"  :data-url="val.url" :key="i" @click="clickTab" >
                 {{val.name}}
                 <i @click="closeTab" :data-url="val.url" ></i>
-              </li>
-              <li v-if="tabHeads.length == 0" class="is-active">
-                {{defaultTab.name}}
-                <i @click="closeTab" :data-url="defaultTab.url" ></i>
-              </li>
-              
+              </li>     
             </ul>
           </div>
           <span class="tab-next" @click="tabToLast"></span>
         </div>
         <div class="tab-content">
-          <div class="tab-con" v-for="(val,i) in tabHeads" :class="val.index == tabIndex ? '' : 'dn' ">
-            <component :is='val.url' > </component> 
+          <div class="tab-con" v-for="(val,i) in tabHeads" :class="val.url == hash ? '' : 'dn' ">
+            <component :is='val.url.split("?")[0]' :url="val.url" @change="changeCon" @reload="reload" > </component> 
           </div>
         </div>
       </el-col>  
@@ -169,71 +250,77 @@
 </template>
 
 <script>
+
 import page1 from './views/page1.vue';
 import page2 from './views/page2.vue';
 import page3 from './views/page3.vue';
+
 
 export default {
   name: 'app',
   data(){
     return {
+      username: '',
       group: true,
       groupMenu:[
         {
-          title: '分组1',
+          title: '企业信息管理',
+          class: 'menu-icon-1',
           content: [
             {
-              name: '表格',
+              name: '烟花厂商列表',
               url: 'page1',
-              icon: 'el-icon-message'
+              icon: 'el-icon-menu'
             },
             {
-              name: '表单',
+              name: '经销商列表',
               url: 'page2',
               icon: 'el-icon-message'
             }
           ]
         },
         {
-          title: '分组2',
+          title: '报警信息管理',
+          class: 'menu-icon-2',
           content: [
             {
-              name: '请求',
+              name: '报警列表',
               url: 'page3',
-              icon: 'el-icon-message'
-            },
-            // {
-            //   name: '测试4',
-            //   url: 'test4.html',
-            //   icon: 'el-icon-message'
-            // },
-            // {
-            //   name: '测试5',
-            //   url: 'test5.html',
-            //   icon: 'el-icon-message'
-            // },
-            // {
-            //   name: '测试6',
-            //   url: 'test6.html',
-            //   icon: 'el-icon-message'
-            // }
+              icon: 'el-icon-upload'
+            }
           ]
         }
       ],
-      tabIndex: 0,
       tabHeads: [
+        
+      ],
+      routers:[ // 注册组件信息
         {
-          name: '表格',
+          name: '烟花厂商列表',
           url: 'page1',
-          index: 0
+          active: 'page1'
+        },
+        {
+          name: '经销商列表',
+          url: 'page2',
+          active: 'page2'
+        },
+        {
+          name: '报警列表',
+          url: 'page3',
+          active: 'page3'
         }
+        
       ],
       isHas: false,
       hash: '',
       tabsWidth: 137,
       ulWidth: 137,
       tabRowWidth: 0,
-      tabLeft: 0
+      tabLeft: 0,
+      defaultActive: '',
+      defaultOpened: [0,1,2,3,4,5],
+      hash:''
     }
   },
   methods:{
@@ -247,24 +334,48 @@ export default {
       window.location.href = '#'+ obj.url;
       this.tabHeads.map((val,i) => {
         if(val.url == obj.url){
-          console.log('已存在该目录');
+          //console.log('已存在该目录');
           this.isHas = true;
         }
       });
       if(!this.isHas){
         this.tabHeads.push(obj);
-        if(window.hasOwnProperty('sessionStorage')){
-          sessionStorage.tabs = JSON.stringify(this.tabHeads);
-        }
+        
         this.ulWidth = this.tabHeads.length * this.tabsWidth;
       }
       this.isHas = false;
       
     },
+    changeCon(obj){ // 修改打开的tab
+      window.location.href = '#'+ obj.url;
+      this.tabHeads.map((val,i) => {
+        if(val.url == obj.url){
+          this.isHas = true;
+        }
+      });
+
+      if(!this.isHas){
+        this.ulWidth = this.tabHeads.length * this.tabsWidth;
+      }
+      this.isHas = false;
+    },
+    reload(obj){ // 重新载入组件
+      let index;
+      this.tabHeads.map((val,i) => {
+        if(val.url == obj.url){
+          this.isHas = true;
+          index = i;
+        }
+      });
+      if(this.isHas){
+        this.tabHeads.splice(index,1);
+      }
+      this.$nextTick(function(){
+        window.location.href = '#'+ obj.url;
+      })
+    },
     clickTab: function(e){
-      const index = e.target.getAttribute('data-index');
       const url = e.target.getAttribute('data-url');
-      this.tabIndex = index;
       window.location.href = '#'+ url;
     },
     closeTab: function(e){
@@ -274,9 +385,9 @@ export default {
           this.tabHeads.splice(i,1);
         }
       });
+
       setTimeout(()=>{
-        this.tabIndex = this.tabHeads[this.tabHeads.length-1].index
-        console.log(this.tabIndex)
+        window.location.href = '#'+this.tabHeads[this.tabHeads.length-1].url;
       },500);
     },
     tabToLast: function(e){
@@ -295,6 +406,19 @@ export default {
       if(this.tabLeft < 0 ){
         this.tabLeft += this.tabsWidth
       }
+    },
+    getIndex(i,index){
+      //(i*groupMenu[i>0?i-1:i].content.length)+index
+      let x = 0;
+      if(i == 0){
+        x = index;
+      }else{
+        for(let n=0;n < i;n++){
+          x += parseInt(this.groupMenu[n].content.length)
+        }
+        x += index;
+      }
+      return x
     }
   },
   components:{
@@ -303,47 +427,72 @@ export default {
     page3
   },
   mounted: function(){
-    const hash = location.hash.replace(/^#/, '');
+    var self = this;
+    if(localStorage.realname != undefined){
+      this.username = localStorage.realname;
+    }else{
+      this.$message('请先登录！');
+      window.location.href = login.html;
+    }
 
+    var hash = location.hash.replace(/^#/, '');
+    if(hash == ''){
+        window.location.href = '#manufacturers'
+    }
+    
     window.addEventListener('hashchange', function(e, triggered) { // 绑定hash值
-      const hash = location.hash.replace(/^#/, ''); 
-      this.tabHeads.map((val,i) => {
-        if(hash == val.url){
-          this.tabIndex = val.index;
+      var hash = location.hash.replace(/^#/, ''); 
+      self.hash = hash;
+      if(hash == ''){
+        window.location.href = '#manufacturers'
+      }else{
+        var isExist = false;
+        for(var key=0;key<this.routers.length;key++){
+          if(this.routers[key].url == hash.split('?')[0]){
+            this.tabHeads.map((val,i)=>{
+              if(val.url == hash){
+                isExist = true
+              }
+            })
+            if(!isExist){
+              this.tabHeads.push({
+                url: hash,
+                name: this.routers[key].name
+              })
+              this.ulWidth = this.tabHeads.length * this.tabsWidth;
+              this.defaultActive = this.routers[key].active;
+              isExist = false;
+              
+            }
+            return
+          }
         }
-      });
+
+        
+      }
     }.bind(this));
 
     this.hash = hash;
-    if(hash != ''){
-      if(window.hasOwnProperty('sessionStorage') && sessionStorage.tabs){
-        const nowTab = JSON.parse(sessionStorage.tabs);
-        nowTab.map((val,i) => {
-          if(hash == val.url){
-            this.tabHeads = [];
-            this.tabHeads.push(val);
-            this.tabIndex = val.index;
-          }
-        });
-      }else{
-        location.href = "#";
-      }
-    }
-    
+    //hash = hash.split('?')[0];
 
+    if(hash != ''){
+      for(var key=0;key<this.routers.length;key++){
+        if(this.routers[key].url == hash.split('?')[0]){
+            this.tabHeads.push({
+              url: hash,
+              name: this.routers[key].name
+            })
+            this.ulWidth = this.tabHeads.length * this.tabsWidth;
+            this.defaultActive = this.routers[key].active;
+          return
+        }
+      }
+      this.ulWidth = this.tabHeads.length * this.tabsWidth;
+    }else{
+      this.defaultActive = 'page1';
+    }
     const row = this.$refs.tabRow;
     this.tabRowWidth = row.clientWidth;
-    
-    // if(hash != ''){
-    //   console.log(hash)
-    //   this.tabHeads.map((val,i) => {
-    //     if(hash == val.url){
-    //       this.tabIndex = i;
-    //       this.defaultTab = val;
-    //     }
-    //   });
-    // }
-    
   }
 }
 </script>
