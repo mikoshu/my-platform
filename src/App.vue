@@ -27,7 +27,7 @@
       top:0;
       right:20px;
       line-height:100px;
-      height:100px; 
+      height:100px;
       dl{
         dd{
           float:left;
@@ -63,7 +63,7 @@
       li{
         color:#535455;
         font-size:14px;
-        
+
       }
       .el-submenu .el-menu-item{
         line-height: 40px;
@@ -79,7 +79,7 @@
           height:40px;
           vertical-align: middle;
         }
-        
+
       }
     }
   }
@@ -118,7 +118,7 @@
       .is-active{
         background:url(./images/tab-140-120.gif) no-repeat -1px -30px;
         z-index:9;
-        
+
       }
       li{
         position:relative;
@@ -163,7 +163,7 @@
       text-align: center;
     }
 
-    
+
   }
   .dn{
     display:none;
@@ -224,7 +224,7 @@
             </el-menu-item>
           </el-submenu>
         </el-menu>
-      </el-col> 
+      </el-col>
 
       <el-col :span="21">
         <div class="tab-row">
@@ -234,17 +234,17 @@
               <li v-if="tabHeads.length != 0" v-for="(val,i) in tabHeads" :class="[val.url == hash? 'is-active' : '' ]"  :data-url="val.url" :key="i" @click="clickTab" >
                 {{val.name}}
                 <i @click="closeTab" :data-url="val.url" ></i>
-              </li>     
+              </li>
             </ul>
           </div>
           <span class="tab-next" @click="tabToLast"></span>
         </div>
         <div class="tab-content">
           <div class="tab-con" v-for="(val,i) in tabHeads" :class="val.url == hash ? '' : 'dn' ">
-            <component :is='val.url.split("?")[0]' :url="val.url" @change="changeCon" @reload="reload" > </component> 
+            <component :is='val.url.split("?")[0]' :url="val.url" @change="changeCon" @reload="reload" > </component>
           </div>
         </div>
-      </el-col>  
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -292,7 +292,7 @@ export default {
         }
       ],
       tabHeads: [
-        
+
       ],
       routers:[ // 注册组件信息
         {
@@ -310,7 +310,7 @@ export default {
           url: 'page3',
           active: 'page3'
         }
-        
+
       ],
       isHas: false,
       hash: '',
@@ -328,9 +328,8 @@ export default {
       const obj = {
         name: e.$el.getAttribute('data-title'),
         url: e.$el.getAttribute('data-href'),
-        index: e.$el.getAttribute('data-index')
       }
-      this.tabIndex = obj.index;
+
       window.location.href = '#'+ obj.url;
       this.tabHeads.map((val,i) => {
         if(val.url == obj.url){
@@ -340,11 +339,13 @@ export default {
       });
       if(!this.isHas){
         this.tabHeads.push(obj);
-        
         this.ulWidth = this.tabHeads.length * this.tabsWidth;
+        if(this.ulWidth > this.tabRowWidth){
+          this.tabLeft = this.tabRowWidth - this.ulWidth;
+        }
       }
       this.isHas = false;
-      
+
     },
     changeCon(obj){ // 修改打开的tab
       window.location.href = '#'+ obj.url;
@@ -439,9 +440,12 @@ export default {
     if(hash == ''){
         window.location.href = '#manufacturers'
     }
-    
+
+    const row = this.$refs.tabRow; // 获取tabrow 宽度
+    this.tabRowWidth = row.clientWidth;
+
     window.addEventListener('hashchange', function(e, triggered) { // 绑定hash值
-      var hash = location.hash.replace(/^#/, ''); 
+      var hash = location.hash.replace(/^#/, '');
       self.hash = hash;
       if(hash == ''){
         window.location.href = '#manufacturers'
@@ -462,13 +466,13 @@ export default {
               this.ulWidth = this.tabHeads.length * this.tabsWidth;
               this.defaultActive = this.routers[key].active;
               isExist = false;
-              
+
             }
             return
           }
         }
 
-        
+
       }
     }.bind(this));
 
