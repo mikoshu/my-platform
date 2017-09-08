@@ -329,19 +329,25 @@ export default {
         name: e.$el.getAttribute('data-title'),
         url: e.$el.getAttribute('data-href'),
       }
-
+      var index = 0;
       window.location.href = '#'+ obj.url;
       this.tabHeads.map((val,i) => {
         if(val.url == obj.url){
           //console.log('已存在该目录');
           this.isHas = true;
+          index = i;
         }
       });
+      console.log(index)
       if(!this.isHas){
         this.tabHeads.push(obj);
         this.ulWidth = this.tabHeads.length * this.tabsWidth;
         if(this.ulWidth > this.tabRowWidth){
           this.tabLeft = this.tabRowWidth - this.ulWidth;
+        }
+      }else{
+        if((this.tabsWidth * index) < Math.abs(this.tabLeft)){
+          this.tabLeft = -(this.tabsWidth * index - 20);
         }
       }
       this.isHas = false;
