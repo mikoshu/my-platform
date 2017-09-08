@@ -338,16 +338,18 @@ export default {
           index = i;
         }
       });
-      console.log(index)
+
       if(!this.isHas){
         this.tabHeads.push(obj);
-        this.ulWidth = this.tabHeads.length * this.tabsWidth;
+        this.ulWidth = (this.tabHeads.length-1) * this.tabsWidth;
         if(this.ulWidth > this.tabRowWidth){
           this.tabLeft = this.tabRowWidth - this.ulWidth;
         }
       }else{
         if((this.tabsWidth * index) < Math.abs(this.tabLeft)){
           this.tabLeft = -(this.tabsWidth * index - 20);
+        }else if((this.tabsWidth * index) > this.tabRowWidth){
+          this.tabLeft = this.tabRowWidth - (this.tabsWidth * index);
         }
       }
       this.isHas = false;
