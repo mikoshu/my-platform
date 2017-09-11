@@ -216,7 +216,7 @@
     <el-row class="menu-content">
       <el-col :span="3" class="side-bar" >
 
-        <el-menu mode="vertical"  :default-active="defaultActive" class="el-menu-vertical-demo" :default-openeds="defaultOpened"  >
+        <el-menu mode="vertical"  :default-active="defaultActive" class="el-menu-vertical-demo" >
           <el-submenu v-for="(group,i) in groupMenu" :index="i.toString()" :key="i">
             <template slot="title"><span :class="group.class"></span>{{group.title}}</template>
             <el-menu-item v-for="(val,index) in group.content" :index="val.url" :data-title="val.name" :data-href="val.url" :data-index="getIndex(i,index)" :key="getIndex(i,index)" @click='toTab'  >
@@ -319,8 +319,9 @@ export default {
       tabRowWidth: 0,
       tabLeft: 0,
       defaultActive: '',
-      defaultOpened: [0,1,2,3,4,5],
-      hash:''
+      //defaultOpened: [0,1,2,3,4,5],
+      hash:'',
+      defalutOpened: 'page1', // 默认打开页面url
     }
   },
   methods:{
@@ -341,7 +342,7 @@ export default {
 
       if(!this.isHas){
         this.tabHeads.push(obj);
-        this.ulWidth = (this.tabHeads.length-1) * this.tabsWidth;
+        this.ulWidth = (this.tabHeads.length) * this.tabsWidth;
         if(this.ulWidth > this.tabRowWidth){
           this.tabLeft = this.tabRowWidth - this.ulWidth;
         }
@@ -446,7 +447,7 @@ export default {
 
     var hash = location.hash.replace(/^#/, '');
     if(hash == ''){
-        window.location.href = '#manufacturers'
+        window.location.href = '#'+ this.defalutOpened
     }
 
     const row = this.$refs.tabRow; // 获取tabrow 宽度
@@ -456,7 +457,7 @@ export default {
       var hash = location.hash.replace(/^#/, '');
       self.hash = hash;
       if(hash == ''){
-        window.location.href = '#manufacturers'
+        window.location.href = '#'+ this.defalutOpened
       }else{
         var isExist = false;
         for(var key=0;key<this.routers.length;key++){
@@ -501,10 +502,9 @@ export default {
       }
       this.ulWidth = this.tabHeads.length * this.tabsWidth;
     }else{
-      this.defaultActive = 'page1';
+      this.defaultActive = this.defalutOpened;
     }
-    const row = this.$refs.tabRow;
-    this.tabRowWidth = row.clientWidth;
+
   }
 }
 </script>
