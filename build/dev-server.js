@@ -50,8 +50,8 @@ Object.keys(proxyTable).forEach(function (context) {
 
 // 代理事件
 
-app.use('/api', proxyMiddleware({
-  target: 'http://adadmin.guozhenlife.net', 
+app.use('/api/news', proxyMiddleware({
+  target: 'https://way.jd.com/jisuapi/get',
   changeOrigin: true,
   cookieDomainRewrite: '.localhost'
 }))

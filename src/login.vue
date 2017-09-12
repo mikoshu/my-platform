@@ -40,7 +40,7 @@
                 </el-input>
                 <el-button type="primary" class="w100 mt-10" @click="login" >登录</el-button>
             </div>
-            
+
         </div>
     </div>
 </template>
@@ -58,36 +58,7 @@
             login(){
                 var self = this;
                 console.log(this.name,this.pwd)
-                axios({
-                    url: '/api/v2/ads/login',
-                    method: 'post',
-                    data:{
-                        username: self.name,
-                        password: self.pwd,
-                        system_id: 2,
-                        remember_me: 1
-                    },
-                    transformRequest: [function (data) {
-                        // Do whatever you want to transform the data
-                        let ret = ''
-                        for (let it in data) {
-                          ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                        }
-                        return ret
-                    }],
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                }).then(function(resp){
-                    const data = resp.data;
-                    if(data.code == 1){
-                        sessionStorage.username = data.data.user_name;
-                        setTimeout(()=>{
-                            window.location.href = 'index.html'
-                        },2000)
-                    }
-                    self.$message(data.msg);
-                })
+                window.location.href="index.html";
             }
         },
         mounted(){

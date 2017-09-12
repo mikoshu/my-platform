@@ -1,286 +1,156 @@
 <style lang="scss">
-    .content{
-      .city-input{
-        width:200px;
+    .news{
+      padding:20px;
+      ul{
+        padding:20px 100px;
       }
-      .edit-city{
-        width:300px;
-        p{
-          margin: 15px auto;
+      .news-top{
+        line-height:36px;
+        padding:0 100px;
+        h2{
+          float:left;
         }
+      }
+      .refresh{
+        float:right;
+      }
+      li{
+        margin-top:20px;
+        line-height:36px;
+        a{
+          color:#000;
+
+        }
+        .btn{
+          float:right;
+        }
+      }
+      .right{
+        float:right;
+        margin-right:100px;
+        margin-bottom:30px;
+        margin-top:30px;
+      }
+      .pop{
+        width:800px;
+        height:700px;
+
         h3{
-          margin-top:25px;
+          text-align:center;
+          font-weight:bold;
+          font-size:16px;
         }
-        .name{
-          display:inline-block;
-          width:85px;
-          text-align: right;
+        .news-content{
+          height:480px;
+          overflow: auto;
+          padding:0 10px;
         }
-        .pop-footer{
-          text-align: center;
+        .desc{
+          color:#ccc;
+          text-align:center;
+          margin: 10px 0;
+          span{
+            display:inline-block;
+            margin:0 10px;
+          }
         }
+        p{
+          margin-bottom:15px;
+          line-height:30px;
+          img{
+            display:block;
+            margin: 0 auto auto auto;
+          }
+        }
+
       }
     }
 </style>
 
 <template>
-    <div class="content">
-        <div class="search-box">
-            <label>
-                城市：
-                <el-select class="input2" v-model="city_id" :placeholder="defaultCity" @change="select">
-                    <el-option key="0" label="全部" value="0" ></el-option>
-                    <el-option
-                      v-for="item in province"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id">
-                    </el-option>
-                </el-select>
-            </label>
-            <label>
-                是否授权：
-                <el-select class="input2" v-model="is_authorized" placeholder="全部" @change="select2">
-                    <el-option key="0" label="全部" value="0" ></el-option>
-                    <el-option key="1" label="已授权" value="1" ></el-option>
-                    <el-option key="2" label="未授权" value="2" ></el-option>
-                </el-select>
-            </label>
-            <label>
-                <el-button class="input" type="primary" icon="search"  @click="search">搜索</el-button>
-            </label>
+    <div class="news">
+      <div class="news-top clearfix">
+        <h2>调用新闻接口</h2>
+        <el-button type="primary" class="refresh" @click="search">刷新列表...</el-button>
+      </div>
 
-        </div>
-
-        <el-table
-        :data="tableData"
-        border
-        style="width: 100%"
+      <ul>
+        <li v-for="(val,index) in list" class="clearfix" >
+          <a href="javascript:;" @click="check(index)">{{'【'+val.src+'】 '+val.title}}</a>
+          <el-button size="small" type="primary" class="btn" @click="check(index)" >查看详情</el-button>
+        </li>
+      </ul>
+      <el-button icon="plus" type="primary" @click="add" class="right" >加载更多...</el-button>
+      <el-dialog
+        title="新闻详情"
+        :visible.sync="showPop"
+        custom-class="pop"
         >
-            <el-table-column
-              prop="province_name"
-              label="省份"
-              sortable
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="city_name"
-              label="城市"
-              sortable
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="community_num"
-              label="小区数"
-              align="center"
-              sortable
-            >
-            </el-table-column>
-            <el-table-column
-              prop="device_num"
-              label="楼宇对讲机数"
-              align="center"
-              sortable
-            >
-            </el-table-column>
-            <el-table-column
-              prop="resident_num"
-              label="用户数"
-              align="center"
-              sortable
-            >
-            </el-table-column>
-            <el-table-column
-              prop="is_authorized"
-              label="是否授权"
-              :formatter="authorized"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              label="操作"
-              align="center"
-            >
-                <template scope="scope">
-                    <el-button type="primary" size="small" icon="edit" @click="edit(scope.$index,scope.row)" >修改</el-button>
-                </template> 
-            </el-table-column>
-          </el-table>
-
-            <div class="block center">
-              <el-pagination
-                layout="prev, pager, next"
-                :total="total" @current-change="currentChange" :page-size="size" >
-              </el-pagination>
-            </div>
-
-            <el-dialog
-            title="授权城市修改"
-            :visible.sync="showPop"
-            size="tiny"
-            custom-class="edit-city"
-            top="30%"
-            >
-              <p>省份：<el-input class="city-input" v-model="popProvince" disabled="disabled"></el-input></p>
-              <p>城市：<el-input class="city-input" v-model="popCity" disabled="disabled"></el-input></p>
-              <h3>广告位配置</h3>
-              <p>
-                <span class="name">楼宇对讲机：</span>
-                <el-checkbox v-model="position1">主屏幕</el-checkbox>
-              </p>
-              <p>
-                <span class="name">App：</span>
-                <el-checkbox v-model="position2">闪屏</el-checkbox>
-                <el-checkbox v-model="position3">Banner</el-checkbox>
-              </p>
-
-              <p class="pop-footer" slot="footer">
-                <el-button type="primary" @click="changeCityPosition">确定</el-button>
-                <el-button type="default" @click="showPop = false">取消</el-button>
-              </p>
-
-            </el-dialog>
-
+        <h3>{{title}}</h3>
+        <div class="desc">
+          <span>{{src}}</span>
+          <span>{{time}}</span>
+        </div>
+        <div v-html="content" class="news-content"></div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="showPop = false">关 闭</el-button>
+        </span>
+      </el-dialog>
     </div>
 </template>
 
 <script>
 import Client from '../js/client';
-//import axios from 'axios';
+
     export default {
         data(){
             return{
-                city_id: "",
-                province_id: '',
-                defaultCity: '',
-                is_authorized: "",
-                province: [],
-                tableData: [],
+                token: '4f3164bda0542ff76c6e7dcf614eab4f',
                 page: 1,
-                total: 0,
                 size: 10,
+                list:[],
                 showPop: false,
-                popCity: '',
-                popCityId: '',
-                popProvince: '',
-                popProvinceId: '',
-                position1: '',
-                position2: '',
-                position3: ''
+                title: '',
+                content: '',
+                src: '',
+                time:''
             }
         },
         methods:{
-            select: function(value){
-                this.$message(value+'')
-            },
-            select2(val){
-                this.$message(val+'')
-            },
-            search(){
-                var self = this;
-                new Client().client({
-                    url: '/api/v2/ads/positions/city/query',   
-                    type: 'GET',
-                    params:{
-                        province_id: self.province_id,
-                        city_id: self.city_id,
-                        is_authorized: self.is_authorized,
-                        page: self.page,
-                        rows: self.size,
-                        size: self.size
-                    },
-                    showLoading: true,
-                    withCredentials: true
-                }).then(function(resp){
-                    self.tableData = resp.data.data.rows;
-                    self.total = resp.data.data.total;
-                });
-            },
-            currentChange(page){
-                this.page = page;
-                this.search();
-            },
-            edit(index,row){
-              this.showPop = true;
-              const id = row.city_id;
-              var self = this;
-              this.position1 = false;
-              this.position2 = false;
-              this.position3 = false;
-              new Client().client({
-                url: '/api/v2/ads/positions/city/'+id,
-                showLoading: true
-              }).then(function(resp){
-                if(resp.data.code == 1){
-                  const data = resp.data.data;
-                  self.popProvince = data.province_name;
-                  self.popProvinceId = data.province_id;
-                  self.popCity = data.city_name;
-                  self.popCityId = data.city_id;
-                  data.position_types.map((val,i)=>{
-                    self['position'+val] = true;
-                  });
-                }else{
-                  self.$message(resp.data.msg);
-                }
-              });
-            },
-            authorized(row){
-                return ['','已授权','未授权'][row.is_authorized];
-            },
-            changeCityPosition: function(){
-              var self = this;
-              var data = {
-                "city_id": self.popCityId,
-                "city_name": self.popCity,
-                "province_id": self.popProvinceId,
-                "province_name": self.popProvince
+          search(){
+            var self = this;
+            new Client().client({
+              url: '/api/news',
+              params:{
+                channel:'头条',
+                num: self.size,
+                start: self.page,
+                appkey: self.token
+              },
+              showLoading: true
+            }).then((resp)=>{
+              console.log(resp.data)
+              var data = resp.data;
+              if(data.code == '10000'){
+                self.list = data.result.result.list;
               }
-              for(let i=0; i<4;i++){
-                if(self["position"+i]){
-                  data["array_datas["+(i-1)+"].id"] = i;
-                } 
-              }
-
-              new Client().client({
-                url: '/api/v2/ads/positions/city/update',
-                method: 'post',
-                data: data,
-                showLoading: true
-              }).then((resp) => {
-                const data = resp.data;
-                if(data.code == 1){
-                  self.$message(data.msg);
-                  self.showPop = false;
-                }else{
-                  self.$message(data.msg);
-                }
-              })
-            }
+            })
+          },
+          add(){
+            this.size += 10;
+            this.search();
+          },
+          check(index){
+            console.log(index)
+            this.title = this.list[index].title;
+            this.content = this.list[index].content;
+            this.src = this.list[index].src;
+            this.time = this.list[index].time;
+            this.showPop = true;
+          }
         },
         mounted(){
-            var self = this;
-            this.search();
-            //this.changeCityPosition()
-            new Client().client({
-                url: '/api/v2/ads/positions/provinces/0/citys',
-                type: 'GET',
-                params:{
-                    status: 1
-                }
-            }).then(function(resp){
-                self.province = resp.data.data
-                self.province.map((val,i)=>{
-                  if(val.name == self.defaultCity){
-                    self.city_id = val.id;
-                    self.province_id = val.province_id;
-                    self.search()
-                  }
-                })
-
-            })
+          this.search();
         }
     }
 </script>

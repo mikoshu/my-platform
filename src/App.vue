@@ -205,7 +205,7 @@
 <template>
   <div class="menu-main">
     <div class="top-banner">
-      <a href="javascript:;" class="logo">烟花安监管理云平台</a>
+      <a href="javascript:;" class="logo">后台管理系统</a>
       <div class="user">
         <dl class="clearfix">
           <dd></dd>
@@ -264,27 +264,27 @@ export default {
       group: true,
       groupMenu:[
         {
-          title: '企业信息管理',
+          title: '菜单栏一',
           class: 'menu-icon-1',
           content: [
             {
-              name: '烟花厂商列表',
+              name: '表格',
               url: 'page1',
               icon: 'el-icon-menu'
             },
             {
-              name: '经销商列表',
+              name: '表单',
               url: 'page2',
               icon: 'el-icon-message'
             }
           ]
         },
         {
-          title: '报警信息管理',
+          title: '菜单栏二',
           class: 'menu-icon-2',
           content: [
             {
-              name: '报警列表',
+              name: '新闻列表',
               url: 'page3',
               icon: 'el-icon-upload'
             }
@@ -296,17 +296,17 @@ export default {
       ],
       routers:[ // 注册组件信息
         {
-          name: '烟花厂商列表',
+          name: '表格',
           url: 'page1',
           active: 'page1'
         },
         {
-          name: '经销商列表',
+          name: '表单',
           url: 'page2',
           active: 'page2'
         },
         {
-          name: '报警列表',
+          name: '新闻列表',
           url: 'page3',
           active: 'page3'
         }
