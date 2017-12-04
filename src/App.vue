@@ -438,12 +438,12 @@ export default {
   },
   mounted: function(){
     var self = this;
-    if(localStorage.realname != undefined){
-      this.username = localStorage.realname;
-    }else{
-      this.$message('请先登录！');
-      window.location.href = login.html;
-    }
+    // if(localStorage.realname != undefined){
+    //   this.username = localStorage.realname;
+    // }else{
+    //   this.$message('请先登录！');
+    //   window.location.href = login.html;
+    // }
 
     var hash = location.hash.replace(/^#/, '');
     if(hash == ''){
