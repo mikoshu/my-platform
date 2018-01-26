@@ -46,7 +46,7 @@
 </template>
 
 <script>
-    import axios from 'axios';
+    import client from './js/client';
     export default{
         data(){
             return{
@@ -56,9 +56,30 @@
         },
         methods:{
             login(){
-                var self = this;
-                console.log(this.name,this.pwd)
-                window.location.href="index.html";
+                  this.$message("登录成功")
+                  setTimeout(()=>{
+                    window.location.href="index.html"
+                  },1000)
+              // client({
+              //   url: '/web/v1/login',
+              //   method: 'POST',
+              //   data:{
+              //     username: this.name,
+              //     password: this.pwd
+              //   },
+              //   showLoading: true
+              // }).then((resp) => {
+              //   if(resp.code == 1){
+              //     localStorage.username = resp.data.username;
+              //     this.$message("登录成功")
+              //     setTimeout(()=>{
+              //       window.location.href="index.html"
+              //     },1000)
+              //     //window.location.href="index.html";
+              //   }else{
+              //     this.$message(resp.msg)
+              //   }
+              // })
             }
         },
         mounted(){

@@ -5,7 +5,7 @@ import App from './App'
 import Login from './login'
 //import router from './router'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'
+import 'element-ui/lib/theme-chalk/index.css'
 
 
 Vue.use(ElementUI)
@@ -21,9 +21,9 @@ new Vue({
   },
   //template: this.temp,
   methods:{
-    
+
   },
-  components: { 
+  components: {
     App,
     Login
   },

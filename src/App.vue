@@ -200,6 +200,29 @@
         }
     }
 
+.block{
+      margin-top:30px;
+  }
+
+  .search-box{
+      text-align: left;
+      padding:20px;
+      label{
+          margin:0 10px;
+      }
+      .input{
+          width:100px;
+      }
+      .input2{
+          width:150px;
+      }
+  }
+  .center{
+      text-align: center;
+      th{
+        text-align:center;
+      }
+  }
 </style>
 
 <template>
@@ -233,14 +256,14 @@
             <ul class="clearfix" ref="tabHead" :style="{left: tabLeft+'px',width: ulWidth+'px'}">
               <li v-if="tabHeads.length != 0" v-for="(val,i) in tabHeads" :class="[val.url == hash? 'is-active' : '' ]"  :data-url="val.url" :key="i" @click="clickTab" >
                 {{val.name}}
-                <i @click="closeTab" :data-url="val.url" ></i>
+                <i @click.stop="closeTab" :data-url="val.url" ></i>
               </li>
             </ul>
           </div>
           <span class="tab-next" @click="tabToLast"></span>
         </div>
         <div class="tab-content">
-          <div class="tab-con" v-for="(val,i) in tabHeads" :class="val.url == hash ? '' : 'dn' ">
+          <div class="tab-con" v-for="(val,i) in tabHeads" :class="val.url == hash ? '' : 'dn' " :key="val.url">
             <component :is='val.url.split("?")[0]' :url="val.url" @change="changeCon" @reload="reload" > </component>
           </div>
         </div>
@@ -254,17 +277,18 @@
 import page1 from './views/page1.vue';
 import page2 from './views/page2.vue';
 import page3 from './views/page3.vue';
-
+import page4 from './views/page4.vue'
+import page5 from './views/page5.vue'
 
 export default {
   name: 'app',
   data(){
     return {
-      username: '',
+      username: 'admin',
       group: true,
       groupMenu:[
         {
-          title: '菜单栏一',
+          title: '基础内容',
           class: 'menu-icon-1',
           content: [
             {
@@ -280,13 +304,29 @@ export default {
           ]
         },
         {
-          title: '菜单栏二',
+          title: '接口用法',
           class: 'menu-icon-2',
           content: [
             {
               name: '新闻列表',
               url: 'page3',
               icon: 'el-icon-upload'
+            }
+          ]
+        },
+        {
+          title: '图表',
+          class: "menu-icon-3",
+          content: [
+            {
+              name: '柱形图',
+              url: 'page4',
+              icon: ''
+            },
+            {
+              name: '地图图表',
+              url: 'page5',
+              icon: ''
             }
           ]
         }
@@ -309,6 +349,16 @@ export default {
           name: '新闻列表',
           url: 'page3',
           active: 'page3'
+        },
+        {
+          name: '柱形图',
+          url: 'page4',
+          active: 'page4'
+        },
+        {
+          name: '地图图表',
+          url: 'page5',
+          active: 'page5'
         }
 
       ],
@@ -396,9 +446,15 @@ export default {
         }
       });
 
-      setTimeout(()=>{
+      //setTimeout(()=>{
+      //this.nextTick(()=>{
+
+      //})
+      this.$nextTick().then(()=>{
         window.location.href = '#'+this.tabHeads[this.tabHeads.length-1].url;
-      },500);
+      })
+
+      //},500);
     },
     tabToLast: function(e){
       const dom = this.$refs.tabHead;
@@ -434,12 +490,14 @@ export default {
   components:{
     page1,
     page2,
-    page3
+    page3,
+    page4,
+    page5
   },
   mounted: function(){
     var self = this;
-    // if(localStorage.realname != undefined){
-    //   this.username = localStorage.realname;
+    // if(localStorage.username != undefined){
+    //   this.username = localStorage.username;
     // }else{
     //   this.$message('请先登录！');
     //   window.location.href = login.html;
