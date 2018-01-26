@@ -93,7 +93,7 @@
         </div>
         <div v-html="content" class="news-content"></div>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="showPop = false">关 闭</el-button>
+          <el-button type="primary" size="mini" @click="showPop = false">关 闭</el-button>
         </span>
       </el-dialog>
     </div>
@@ -119,7 +119,7 @@ import Client from '../js/client';
         methods:{
           search(){
             var self = this;
-            new Client().client({
+            Client({
               url: '/api/news',
               params:{
                 channel:'头条',
@@ -129,7 +129,6 @@ import Client from '../js/client';
               },
               showLoading: true
             }).then((resp)=>{
-              console.log(resp.data)
               var data = resp.data;
               if(data.code == '10000'){
                 self.list = data.result.result.list;

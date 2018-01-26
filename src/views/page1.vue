@@ -4,7 +4,7 @@
     .block{
         margin-top:30px;
     }
-    
+
     .search-box{
         text-align: left;
         padding:20px;
@@ -89,10 +89,10 @@
               label-class-name="center"
               class-name="center"
             >
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="primary" size="small" icon="edit" @click="edit(scope.$index,scope.row)" >编辑</el-button>
-                    <el-button type="danger" size="small" >删除 <i class="el-icon-delete"></i></el-button>  
-                </template> 
+                    <el-button type="danger" size="small" >删除 <i class="el-icon-delete"></i></el-button>
+                </template>
             </el-table-column>
           </el-table>
 
@@ -103,7 +103,7 @@
               </el-pagination>
             </div>
     </div>
-    
+
 </template>
 
 <script>
