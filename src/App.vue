@@ -518,6 +518,7 @@ export default {
         window.location.href = '#'+ this.defalutOpened
       }else{
         var isExist = false;
+        this.defaultActive = hash
         for(var key=0;key<this.routers.length;key++){
           if(this.routers[key].url == hash.split('?')[0]){
             this.tabHeads.map((val,i)=>{
