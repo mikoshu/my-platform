@@ -228,7 +228,7 @@
   transition: transform .5s, opacity .5s;
 }
 .list-complete-enter, .list-complete-leave-to
-{
+ {
   opacity: 0;
   transform: translateY(30px);
 }
@@ -278,7 +278,7 @@
           <span class="tab-next" @click="tabToLast"></span>
         </div>
         <div class="tab-content">
-          <div class="tab-con" v-for="(val,i) in tabHeads" :class="val.url == hash ? '' : 'dn' " :key="val.url">
+          <div class="tab-con" v-for="(val,i) in tabHeads" :class="val.url == hash ? '' : 'dn' " :key="val.key">
             <component :is='val.url.split("?")[0]' :url="val.url" @change="changeCon" @reload="reload" > </component>
           </div>
         </div>
@@ -384,6 +384,7 @@ export default {
       tabRowWidth: 0,
       tabLeft: 0,
       defaultActive: '',
+      menuReload: false, // 点击菜单切换时是否刷新组件 true 为刷新
       //defaultOpened: [0,1,2,3,4,5],
       hash:'',
       defalutOpened: 'page1', // 默认打开页面url
@@ -394,6 +395,7 @@ export default {
       const obj = {
         name: e.$el.getAttribute('data-title'),
         url: e.$el.getAttribute('data-href'),
+        key: new Date().getTime().toString()
       }
       var index = 0;
       window.location.href = '#'+ obj.url;
@@ -402,6 +404,7 @@ export default {
           //console.log('已存在该目录');
           this.isHas = true;
           index = i;
+          val.key = this.menuReload ? new Date().getTime().toString() : val.key
         }
       });
 
