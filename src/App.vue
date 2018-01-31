@@ -223,6 +223,18 @@
         text-align:center;
       }
   }
+
+.list-complete-item {
+  transition: transform .5s, opacity .5s;
+}
+.list-complete-enter, .list-complete-leave-to
+{
+  opacity: 0;
+  transform: translateY(30px);
+}
+.list-complete-leave-active {
+  //position: absolute;
+}
 </style>
 
 <template>
@@ -253,12 +265,15 @@
         <div class="tab-row">
           <span class="tab-last" @click="tabToNext"></span>
           <div class="tab-head-con" ref="tabRow">
-            <ul class="clearfix" ref="tabHead" :style="{left: tabLeft+'px',width: ulWidth+'px'}">
-              <li v-if="tabHeads.length != 0" v-for="(val,i) in tabHeads" :class="[val.url == hash? 'is-active' : '' ]"  :data-url="val.url" :key="i" @click="clickTab" >
+            <!-- <ul class="clearfix" ref="tabHead" :style="{left: tabLeft+'px',width: ulWidth+'px'}"> -->
+              <transition-group class="clearfix" name="list-complete" tag="ul" ref="tabHead" :style="{left: tabLeft+'px',width: ulWidth+'px'}">
+              <li v-show="tabHeads.length != 0" v-for="(val,i) in tabHeads" :class="[val.url == hash? 'is-active' : '' ]"  :data-url="val.url" :key="val.url" @click="clickTab" class="list-complete-item" >
                 {{val.name}}
                 <i @click.stop="closeTab" :data-url="val.url" ></i>
               </li>
-            </ul>
+              </transition-group>
+            <!-- </ul> -->
+
           </div>
           <span class="tab-next" @click="tabToLast"></span>
         </div>
@@ -274,9 +289,9 @@
 
 <script>
 
-import page1 from './views/page1.vue';
-import page2 from './views/page2.vue';
-import page3 from './views/page3.vue';
+import page1 from './views/page1.vue'
+import page2 from './views/page2.vue'
+import page3 from './views/page3.vue'
 import page4 from './views/page4.vue'
 import page5 from './views/page5.vue'
 
