@@ -1,6 +1,6 @@
 # 基于element-ui带tab切换的后台框架
 
-> 改页面不使用vue-router插件
+> 该后台不使用vue-router插件
 
 ## 使用方法
 
@@ -29,6 +29,8 @@ import page4 from './views/page4.vue'
 import page5 from './views/page5.vue'
 
 // 在 data 里建立 groupMenu 数组
+// class 属性为侧边栏组菜单文字前span标签样式，可自定义修改
+// icon 属性用于子菜单预留图标字段，可以自定义
 
 groupMenu:[
   {
@@ -76,6 +78,8 @@ groupMenu:[
   }
 ]
 
+
+
 //在data里创建 routers 数组，该数组用于记录组件的信息，url 值为组件名称， active 值为组件对应的hash值，可以与url不同
 
 routers:[ // 注册组件信息
@@ -119,4 +123,12 @@ components:{
 
 // 在原demo里可直接修改以上属性不用从新添加--
 
+// 在tab切换和侧边栏切换时，默认是不会重新渲染切换时的组件，可以通过 menuReload 属性控制侧边栏切换时是否重新渲染，true为重新渲染，默认为 false
+
+menuReload: false, // 点击菜单切换时是否刷新组件 true 为刷新
+
+defalutOpened: 'page1', // 默认打开页面url 在页面不存在hash值时默认打开的页面 此处url变为 index.html#page1
+
 ```
+
+>注意:该后台将login页面单独分开，可以通过localhsot:8080/login.html方法login页面,app页面通过index.html访问。
