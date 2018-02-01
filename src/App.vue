@@ -464,15 +464,14 @@ export default {
         }
       });
 
-      //setTimeout(()=>{
-      //this.nextTick(()=>{
-
-      //})
-      this.$nextTick().then(()=>{
-        window.location.href = '#'+this.tabHeads[this.tabHeads.length-1].url;
-      })
-
-      //},500);
+      if(url == this.hash){
+        this.$nextTick(()=>{
+          window.location.href = '#'+this.tabHeads[this.tabHeads.length-1].url;
+        })
+      }
+      // this.$nextTick().then(()=>{
+      //   window.location.href = '#'+this.tabHeads[this.tabHeads.length-1].url;
+      // })
     },
     tabToLast: function(e){
       const dom = this.$refs.tabHead;
