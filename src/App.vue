@@ -156,7 +156,7 @@
     background:#efeff4;
     .tab-con{
       height:100%;
-      overflow-y: scroll;
+      overflow-y: auto;
       background: #fff;
     }
     .el-dialog__footer,.el-message-box__btns{
