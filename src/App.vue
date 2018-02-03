@@ -66,6 +66,9 @@
 
       }
       .el-submenu .el-menu-item{
+        span{
+          vertical-align: -2px;
+        }
         line-height: 40px;
         height:40px;
       }
@@ -74,10 +77,10 @@
         height:40px;
         line-height: 40px;
         span{
-          display: inline-block;
-          width:35px;
-          height:40px;
-          vertical-align: middle;
+          //display: inline-block;
+          //width:35px;
+          //height:40px;
+          vertical-align: -2px;
         }
 
       }
@@ -251,11 +254,11 @@
     <el-row class="menu-content">
       <el-col :span="3" class="side-bar" >
 
-        <el-menu mode="vertical"  :default-active="defaultActive" class="el-menu-vertical-demo" >
+        <el-menu mode="vertical" :default-openeds="defaultShow"  :default-active="defaultActive" class="el-menu-vertical-demo" >
           <el-submenu v-for="(group,i) in groupMenu" :index="i.toString()" :key="i">
             <template slot="title"><span :class="group.class"></span>{{group.title}}</template>
-            <el-menu-item v-for="(val,index) in group.content" :index="val.url" :data-title="val.name" :data-href="val.url" :data-index="getIndex(i,index)" :key="getIndex(i,index)" @click='toTab'  >
-              {{val.name}}
+            <el-menu-item v-for="(val,index) in group.content" :index="val.url" :data-title="val.name" :data-href="val.url"  :key="i+'-'+index" @click='toTab'  >
+              <span :class="val.icon"></span>{{val.name}}
             </el-menu-item>
           </el-submenu>
         </el-menu>
@@ -304,44 +307,44 @@ export default {
       groupMenu:[
         {
           title: '基础内容',
-          class: 'menu-icon-1',
+          class: 'el-icon-menu',
           content: [
             {
               name: '表格',
               url: 'page1',
-              icon: 'el-icon-menu'
+              icon: 'el-icon-date'
             },
             {
               name: '表单',
               url: 'page2',
-              icon: 'el-icon-message'
+              icon: 'el-icon-edit-outline'
             }
           ]
         },
         {
           title: '接口用法',
-          class: 'menu-icon-2',
+          class: 'el-icon-phone',
           content: [
             {
               name: '新闻列表',
               url: 'page3',
-              icon: 'el-icon-upload'
+              icon: 'el-icon-tickets'
             }
           ]
         },
         {
           title: '图表',
-          class: "menu-icon-3",
+          class: "el-icon-picture",
           content: [
             {
               name: '柱形图',
               url: 'page4',
-              icon: ''
+              icon: 'el-icon-bell'
             },
             {
               name: '地图图表',
               url: 'page5',
-              icon: ''
+              icon: 'el-icon-picture-outline'
             }
           ]
         }
@@ -349,7 +352,7 @@ export default {
       tabHeads: [
 
       ],
-      routers:[ // 注册组件信息
+      routers:[ // 注册组件信息，name值将是tab标签的title
         {
           name: '表格',
           url: 'page1',
@@ -378,15 +381,14 @@ export default {
 
       ],
       isHas: false,
-      hash: '',
-      tabsWidth: 137,
-      ulWidth: 137,
-      tabRowWidth: 0,
-      tabLeft: 0,
+      tabsWidth: 137, // 单个tab标签的宽度
+      ulWidth: 137,  // 初始tab-box ul 的宽度
+      tabRowWidth: 0, // tabrow初始宽度
+      tabLeft: 0,  // tab 的left值 （自动计算）
       defaultActive: '',
       menuReload: false, // 点击菜单切换时是否刷新组件 true 为刷新
-      //defaultOpened: [0,1,2,3,4,5],
-      hash:'',
+      defaultShow: ['0','1','2'], // 默认子菜单展开状态，数组为子菜单的key值，可自行设定
+      hash:'', // 当前url的hash值
       defalutOpened: 'page1', // 默认打开页面url
     }
   },
@@ -490,19 +492,19 @@ export default {
         this.tabLeft += this.tabsWidth
       }
     },
-    getIndex(i,index){
-      //(i*groupMenu[i>0?i-1:i].content.length)+index
-      let x = 0;
-      if(i == 0){
-        x = index;
-      }else{
-        for(let n=0;n < i;n++){
-          x += parseInt(this.groupMenu[n].content.length)
-        }
-        x += index;
-      }
-      return x
-    }
+    // getIndex(i,index){ // 放弃使用
+    //   //(i*groupMenu[i>0?i-1:i].content.length)+index
+    //   let x = 0;
+    //   if(i == 0){
+    //     x = index;
+    //   }else{
+    //     for(let n=0;n < i;n++){
+    //       x += parseInt(this.groupMenu[n].content.length)
+    //     }
+    //     x += index;
+    //   }
+    //   return x
+    // }
   },
   components:{
     page1,
@@ -517,7 +519,7 @@ export default {
     //   this.username = localStorage.username;
     // }else{
     //   this.$message('请先登录！');
-    //   window.location.href = login.html;
+    //   window.location.href = 'login.html';
     // }
 
     var hash = location.hash.replace(/^#/, '');
