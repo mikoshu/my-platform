@@ -131,4 +131,4 @@ defalutOpened: 'page1', // 默认打开页面url 在页面不存在hash值时默
 
 ```
 
->注意:该后台将login页面单独分开，可以通过localhsot:8080/login.html方法login页面,app页面通过index.html访问。
+>注意:该后台将login页面单独分开，可以通过localhsot:8080/login.html访问login页面,app页面通过index.html访问。
